@@ -36,9 +36,9 @@ func newEnv() env {
 	help := flag.Bool("help", false, "Print this help")
 	rootDir := flag.String("rootdir", "/workspace", "Root directory")
 	flag.BoolVar(&e.dryRun, "dryrun", false, "Use stdout instead of output path")
-	flag.StringVar(&e.configDir, "configdir", "./config", "Config directory")
-	flag.StringVar(&e.inputDir, "inputdir", "./input", "Input path for files to process")
-	flag.StringVar(&e.outputDir, "outputdir", "./output", "Output path for processed files")
+	flag.StringVar(&e.configDir, "configdir", "./config", "Config directory relative to root path")
+	flag.StringVar(&e.inputDir, "inputdir", "./input", "Input path for files to process relative to root path")
+	flag.StringVar(&e.outputDir, "outputdir", "./output", "Output path for processed files relative to root path")
 	profiles := flag.String("profiles", "a,b,c", "List of comma separated profiles")
 	e.profiles = strings.Split(*profiles, ",")
 

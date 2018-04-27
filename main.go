@@ -37,7 +37,7 @@ func newEnv() env {
 	rootDir := flag.String("rootdir", "/workspace", "Root directory")
 	flag.BoolVar(&e.dryRun, "dryrun", false, "Use stdout instead of output path")
 	flag.StringVar(&e.configDir, "configdir", "./config", "Config directory relative to root path")
-	flag.StringVar(&e.inputDir, "inputdir", "./input", "Input path for files to process relative to root path")
+	flag.StringVar(&e.inputDir, "inputdir", "./templates", "Input path for files to process relative to root path")
 	flag.StringVar(&e.outputDir, "outputdir", "./output", "Output path for processed files relative to root path")
 	profiles := flag.String("profiles", "a,b,c", "List of comma separated profiles")
 	e.profiles = strings.Split(*profiles, ",")
@@ -123,7 +123,7 @@ func readConfigFile(filename string) (map[string]string, error) {
 
 func getConfigFiles(e env) []string {
 	// default values
-	file := e.configDir + "/config.properties"
+	file := e.configDir + "/values.properties"
 	if !exists(file) {
 		log.WithFields(log.Fields{"file": file}).Fatal("A default file must exist")
 	}
@@ -134,7 +134,7 @@ func getConfigFiles(e env) []string {
 	// profiles values
 	if len(e.profiles) > 0 && e.profiles[0] != "" {
 		for i := range e.profiles {
-			current := e.configDir + "/config-" + e.profiles[i] + ".properties"
+			current := e.configDir + "/values-" + e.profiles[i] + ".properties"
 			if exists(current) {
 				res = append(res, current)
 			}

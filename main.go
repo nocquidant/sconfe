@@ -30,24 +30,11 @@ type env struct {
 	profiles  []string
 }
 
-func rootDir() string {
-	rootDir := ""
-	if os.Getenv("SCONFE_ROOT_DIR") != "" {
-		rootDir = os.Getenv("SCONFE_ROOT_DIR")
-	} else {
-		ex, err := os.Executable()
-		if err != nil {
-			log.Fatalf("Cannot get executable. %s", err)
-		}
-		rootDir = filepath.Dir(ex)
-	}
-	return replacer.Replace(path.Clean(rootDir))
-}
-
-func newEnv(rootDir string) env {
+func newEnv() env {
 	e := env{}
 
 	help := flag.Bool("help", false, "Print this help")
+	rootDir := flag.String("rootdir", "/workspace", "Root directory")
 	flag.BoolVar(&e.dryRun, "dryrun", false, "Use stdout instead of output path")
 	flag.StringVar(&e.configDir, "configdir", "./config", "Config directory")
 	flag.StringVar(&e.inputDir, "inputdir", "./input", "Input path for files to process")
@@ -62,12 +49,12 @@ func newEnv(rootDir string) env {
 		os.Exit(0)
 	}
 
-	log.Debugf("Using rootDir=%s", rootDir)
+	log.Debugf("Using rootDir=%s", *rootDir)
 
 	// cleanup
-	e.configDir = replacer.Replace(path.Clean(path.Join(rootDir, e.configDir)))
-	e.inputDir = replacer.Replace(path.Clean(path.Join(rootDir, e.inputDir)))
-	e.outputDir = replacer.Replace(path.Clean(path.Join(rootDir, e.outputDir)))
+	e.configDir = replacer.Replace(path.Clean(path.Join(*rootDir, e.configDir)))
+	e.inputDir = replacer.Replace(path.Clean(path.Join(*rootDir, e.inputDir)))
+	e.outputDir = replacer.Replace(path.Clean(path.Join(*rootDir, e.outputDir)))
 
 	return e
 }
@@ -251,7 +238,7 @@ func processFiles(e env, config map[string]string) error {
 }
 
 func main() {
-	e := newEnv(rootDir())
+	e := newEnv()
 	e.toString() // debug
 
 	files := getConfigFiles(e)

@@ -1,3 +1,6 @@
+#
+# Run this file with: docker run --rm -v $(pwd):/workspace nocquidant/sconfe
+#
 # Multi stage build
 #  - We don't need go installed once our app is compiled
 #  - Leaving the build image
